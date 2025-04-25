@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menus>
+    <group name="General" order="2">
+        <menugroup name="Website Cms" icon="bx bx-globe" order="4">
+            <menu name="Cms Page" route="websitecms.index" />
+            <menu name="Services" route="service.index" />
+            <menu name="Industries" route="industries.index" />
+            <menu name="Feedback" route="feedback.index" />
+            <menu name="Associator Logo" route="associator.index" />
+            <menu name="About us - Shop" route="aboutusshop.index" />
+            <menu name="Contact us - Form" route="contactus.index" />
+           
+
+        </menugroup>
+    </group>
+</menus>

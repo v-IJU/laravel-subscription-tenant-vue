@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menus>
+    <group name="General" order="2">
+        <menugroup name="Product" icon="bx bx-copy" order="5">
+           
+            <menu name="File Manager" route="product.filemanager" />
+        </menugroup>
+    </group>
+</menus>

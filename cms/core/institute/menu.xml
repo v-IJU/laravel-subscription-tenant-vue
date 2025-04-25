@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menus>
+    <group name="General" order="3">
+        <menugroup name="Intitute" icon="bx bxs-institution" order="3">
+            <menu name="View Intitute" route="institute.index" />
+            <menu name="Add Intitute" route="institute.create" />
+        </menugroup>
+    </group>
+</menus>

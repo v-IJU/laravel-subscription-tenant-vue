@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menus>
+    <group name="General" order="3">
+        <menugroup name="Subscription Plan" icon="bx bxs-lock-alt" order="4">
+            <menu name="View Subscription" route="subscription.index" />
+            <menu name="Add Subscription" route="subscription.create" />
+        </menugroup>
+    </group>
+</menus>

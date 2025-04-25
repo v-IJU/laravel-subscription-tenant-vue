@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menus>
+    <group name="General" order="3">
+        <menugroup name="Payment Gateway" icon="bx bx-dollar-circle" order="3">
+            <menu name="View Gateway" route="paymentgateway.index" />
+            <menu name="Add Gateway" route="paymentgateway.create" />
+        </menugroup>
+    </group>
+</menus>

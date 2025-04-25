@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menus>
+    <group name="General" order="3">
+        <!-- <menu name="Menus" route="wmenuindex" icon="fa fa-braille"/> -->
+        <menu name="Menu Assignment" icon="bx bx-menu" route="menu_assign_from_admin" />
+    </group>
+</menus>

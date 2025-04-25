@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menus>
+    <group name="Configurations" order="4">
+     
+        <menu name="Site Configurations" icon="bx bx-globe" route="admin_site_configuration"/>
+        <menu name="Mail Configurations"  icon="bx bx-mail-send" route="admin_mail_configuration"/>
+       
+    </group>
+
+    <group name="Logs" order="5">
+     
+        <menu name="Import Logs" icon="bx bx-globe" route="import.log"/>
+       
+       
+    </group>
+</menus>

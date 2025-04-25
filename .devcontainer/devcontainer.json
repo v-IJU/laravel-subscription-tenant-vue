@@ -1,0 +1,40 @@
+// https://aka.ms/devcontainer.json
+{
+    "name": "CMS",
+    "dockerComposeFile": ["../docker-compose.yml"],
+    "service": "app",
+    "workspaceFolder": "/var/www",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "onecentlin.laravel-extension-pack",
+                "onecentlin.laravel-blade",
+                "onecentlin.laravel5-snippets",
+                "ryannaddy.laravel-artisan",
+                "amiralizadeh9480.laravel-extra-intellisense",
+                "codingyu.laravel-goto-view",
+                "pgl.laravel-jump-controller",
+                "naoray.laravel-goto-components",
+                "shufo.vscode-blade-formatter",
+                "glitchbl.laravel-create-view",
+                "IHunte.laravel-blade-wrapper",
+                "mikestead.dotenv",
+                "damms005.devdb"
+            ],
+            "settings": {
+                "blade.format.enable": true,
+                "[blade]": {
+                    "editor.autoClosingBrackets": "always",
+                    "editor.defaultFormatter": "onecentlin.laravel-blade"
+                }
+            }
+        }
+    },
+    "remoteUser": "root",
+    "containerUser": "root",
+    "postCreateCommand": "chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache && chmod -R 775 /var/www/storage /var/www/bootstrap/cache"
+
+    // "forwardPorts": [],
+    // "runServices": [],
+    // "shutdownAction": "none",
+}
