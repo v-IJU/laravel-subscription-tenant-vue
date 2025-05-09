@@ -52,10 +52,11 @@
 
                                 <th>No</th>
                                 <th>Name</th>
-                                <th>User Name</th>
+                                {{-- <th>User Name</th>
                                 <th>Email</th>
                                 <th>Mobile</th>
-                                <th>Group</th>
+                                <th>Group</th> --}}
+                                <th>Created Date</th>
                                 <th>Status</th>
                                 <th class="noExport">Action</th>
                             </tr>
@@ -75,10 +76,11 @@
 @endsection
 @section('script')
     <script>
+          window.statuschange='{{route('institute_action_from_admin')}}';
         $('document').ready(function() {
 
             var element = $("#datatable-buttons");
-            var url = '{{ route('get_user_data_from_admin') }}';
+            var url = '{{ route('get_institute_data_from_admin') }}';
             var column = [{
                     data: 'rownum',
                     defaultContent: '',
@@ -88,37 +90,49 @@
                     className: 'textcenter'
                 },
                 {
-                    data: 'name',
-                    name: 'name',
-                    width: '15%'
+                    data: 'institute_name',
+                    name: 'institute_name',
                 },
+                // {
+                //     data: 'username',
+                //     name: 'username',
+                //     width: '20%'
+                // },
+                // {
+                //     data: 'email',
+                //     name: 'email',
+                //     width: '10%',
+                //     className: 'textcenter'
+                // },
+                // {
+                //     data: 'mobile',
+                //     name: 'mobile',
+                //     className: 'textcenter'
+                // },
+                // {
+                //     data: 'group',
+                //     name: 'group',
+                //     className: 'textcenter'
+                // },
                 {
-                    data: 'username',
-                    name: 'username',
-                    width: '20%'
-                },
-                {
-                    data: 'email',
-                    name: 'email',
-                    width: '10%',
+                    data: 'created_date',
+                    name: 'created_at',
                     className: 'textcenter'
                 },
-                {
-                    data: 'mobile',
-                    name: 'mobile',
-                    className: 'textcenter'
-                },
-                {
-                    data: 'group',
-                    name: 'group',
-                    className: 'textcenter'
-                },
-                {
-                    data: 'status',
-                    name: 'users.status',
-                    sortable: false,
-                    className: 'textcenter'
-                },
+                { data: 'status', name: 'id', searchable: false, sortable: false, className: 'textcenter',render : function(data, type, row, meta)
+                    {
+                        if(row['id']!=0)
+                        {
+                            return `<label class="switch">
+                        <input type="checkbox" id=${row['id']} ${row['status']=="Enabled" ? 'checked':''} class="toggle-class" onchange="myFunction(this.checked ? 1:0,this.id)">
+                        <span class="slider round"></span>
+                      </label>`;
+                        }else{
+                            return "";
+                        }
+                        
+                    }
+                  },
                 {
                     data: 'action',
                     name: 'users.id',
@@ -130,7 +144,7 @@
             var csrf = '{{ csrf_token() }}';
 
             var options = {
-                //order : [ [ 6, "desc" ] ],
+                order : [ [ 2, "desc" ] ],
                 //lengthMenu: [[100, 250, 500], [100, 250, 500]]
                 button: [{
                         name: "Publish",

@@ -9,7 +9,16 @@
 
 
  <div class="actions">
+     @if(@$route == 'institute')
+        <form method="post" action="{{ route('institute_onboard_from_admin', $data->id) }}">
 
+
+            {{ csrf_field() }}
+
+
+            <button class="editbutton btn btn-primary onboard" type="submit">Onboard</button>
+        </form>
+     @endif
      <a class="btn btn-outline-secondary btn-sm edit" title="Edit" data-toggle="modal" data={{ $data->id }}
          href="{{ route($route . '.edit', $data->id) }}">
          <i class="fas fa-pencil-alt"></i>

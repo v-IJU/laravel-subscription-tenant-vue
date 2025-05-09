@@ -73,7 +73,10 @@ class CreateSubscriptionTable extends Migration
             $table
                 ->integer("user_id")
                 ->unsigned()
-                ->nullable();
+                ->nullable()
+                ->comment(
+                    "use usermodel or institute model if multitenant multi db means use institute"
+                );
             $table
                 ->integer("subscription_plan_id")
                 ->unsigned()

@@ -15,6 +15,7 @@ class CreateInstituteRelatedInformationTable extends Migration
     {
         Schema::create("institute", function (Blueprint $table) {
             $table->increments("id");
+            $table->string("institute_name")->nullable();
             $table
                 ->integer("user_id")
                 ->unsigned()

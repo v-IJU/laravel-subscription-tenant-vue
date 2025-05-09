@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Jobs\TenantInstituteJob;
 use App\Models\DomainModel;
 use App\Models\Multitenant;
-use cms\institute\Models\InstituteModel;
+use cms\core\institute\Models\InstituteModel;
 
 use Yajra\DataTables\Facades\DataTables;
 
@@ -82,8 +82,23 @@ class InstituteController extends Controller
                 "status" => 1,
             ]);
 
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            dd($e);
+        }
+
+        Session::flash("success", "saved successfully");
+        return redirect()->route("institute.index");
+    }
+
+    public function onboard(Request $request, $id)
+    {
+        try {
+            DB::beginTransaction();
+            $institute = InstituteModel::find($id);
             $tenantId = strtolower(
-                str_replace(" ", "_", $request->institute_name)
+                str_replace(" ", "_", $institute->institute_name)
             ); // Unique ID
             $tenant = Multitenant::create([
                 "id" => $tenantId,
@@ -98,15 +113,11 @@ class InstituteController extends Controller
             ]);
 
             dispatch(new TenantInstituteJob($tenant, $institute));
-
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
             dd($e);
         }
-
-        Session::flash("success", "saved successfully");
-        return redirect()->route("institute.index");
     }
 
     /**
@@ -198,8 +209,9 @@ class InstituteController extends Controller
         $data = InstituteModel::select(
             DB::raw("@rownum  := @rownum  + 1 AS rownum"),
             "id",
-            "name",
-            "desc",
+            "institute_name",
+            "created_at",
+            "onboard_status",
             DB::raw(
                 "(CASE WHEN " .
                     DB::getTablePrefix() .
@@ -221,6 +233,9 @@ class InstituteController extends Controller
                     return "";
                 }
             })
+            ->addColumn("created_date", function ($data) {
+                return $data->created_at->format("d-m-Y");
+            })
             ->addColumn("actdeact", function ($data) {
                 if ($data->id != "1") {
                     $statusbtnvalue =
@@ -237,12 +252,18 @@ class InstituteController extends Controller
                 }
             })
             ->addColumn("action", function ($data) {
-                return '<a class="editbutton btn btn-default" data-toggle="modal" data="' .
-                    $data->id .
-                    '" href="' .
-                    route("institute.edit", $data->id) .
-                    '" ><i class="glyphicon glyphicon-edit"></i>&nbsp;Edit</a>';
-                //return $data->id;
+                return view("layout::datatable.action", [
+                    "data" => $data,
+                    "route" => "institute",
+                    // "authorize_edit" => CGate::authorizeEdit(
+                    //     "edit-academicyear"
+                    // ),
+                    // "authorize_delete" => CGate::authorizeEdit(
+                    //     "delete-academicyear"
+                    // ),
+
+                    //  "route1" => "examterm",
+                ])->render();
             });
 
         // return $data;

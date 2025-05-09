@@ -14,6 +14,33 @@ class Configurations
     function __construct()
     {
     }
+    const EXCLUDEMODULES = [
+        "candidate",
+        "schoolmanagement",
+        "subscription",
+        "Demo",
+        "helpdesk",
+        "notification_settings",
+    ];
+
+    const DEFAULTMODULES = [
+        "admin",
+        "configurations",
+        "layout",
+        "menu",
+        "user",
+        "usergroup",
+        "plugins",
+        "academicyear",
+        "gate",
+        "module",
+    ];
+    const EXCLUDEMODULESBASEBATH = [
+        "\cms\core\institute",
+        "/cms/core/institute",
+        "\cms\core\subscription",
+        "/cms/core/subscription",
+    ];
     const ADMIN_NAME = "Administrator";
     const ISSUE_ACCESS_TOKEN = "SchoolUniform#$";
     const ACCESS_API = "access-api";
@@ -47,8 +74,6 @@ class Configurations
         "others" => "Others",
     ];
 
-
-
     const DRESS_SIZES = [
         "26" => "26",
         "28" => "28",
@@ -61,7 +86,6 @@ class Configurations
         "42" => "42",
         "44" => "44",
         "46" => "46",
-
     ];
 
     const LOGO_PATH = "https://schoolmanagegit.webbazaardevelopment.com/school/profiles/1748204780466456.png";

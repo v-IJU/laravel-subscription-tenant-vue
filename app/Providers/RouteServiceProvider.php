@@ -27,13 +27,15 @@ class RouteServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->configureRateLimiting();
-
+        $centralDomains = $this->centralDomains();
         $this->routes(function () {
-            Route::middleware("api")
-                ->prefix("api/v1")
-                ->group(base_path("routes/apiv1.php"));
+            // Route::middleware("api")
+            //     ->prefix("api/v1")
+            //     ->group(base_path("routes/apiv1.php"));
 
-            Route::middleware("web")->group(base_path("routes/web.php"));
+            // Route::middleware("web")->group(base_path("routes/web.php"));
+            $this->mapApiRoutes();
+            $this->mapWebRoutes();
         });
     }
 
@@ -49,5 +51,49 @@ class RouteServiceProvider extends ServiceProvider
                 $request->user()?->id ?: $request->ip()
             );
         });
+    }
+
+    protected function centralDomains(): array
+    {
+        if (config("app.env") == "local") {
+            return config("tenancy.central_domains_local");
+        } else {
+            return config("tenancy.central_domains");
+        }
+    }
+    protected function mapWebRoutes()
+    {
+        foreach ($this->centralDomains() as $domain) {
+            Route::middleware("web")
+                ->domain($domain)
+                ->namespace($this->namespace)
+                ->group(base_path("routes/web.php"));
+
+            Route::middleware("web")
+                ->domain($domain)
+                ->namespace($this->namespace)
+                ->group(base_path("routes/superadmin.php"));
+
+            // if (file_exists(base_path("routes/superadmin.php"))) {
+            //     Route::namespace(static::$controllerNamespace)->group(
+            //         base_path("routes/superadmin.php")
+            //     );
+            // }
+        }
+    }
+
+    protected function mapApiRoutes()
+    {
+        // foreach ($this->centralDomains() as $domain) {
+        //     Route::prefix("api")
+        //         ->domain($domain)
+        //         ->middleware("api")
+        //         ->namespace($this->namespace)
+        //         ->group(base_path("routes/api.php"));
+        // }
+        Route::prefix("api/v1")
+            ->middleware("api")
+            ->namespace($this->namespace)
+            ->group(base_path("routes/apiv1.php"));
     }
 }
