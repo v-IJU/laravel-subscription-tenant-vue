@@ -17,7 +17,7 @@
 <script src="{{ URL::asset('build/libs/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
 <script src="{{ URL::asset('build/libs/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
 
-<script src="{{ URL::asset('build/libs/select2/js/select2.min.js') }}"></script>
+
 <script src="{{ URL::asset('build/libs/bootstrap-timepicker/js/bootstrap-timepicker.min.js') }}"></script>
 <script src="{{ URL::asset('build/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"></script>
 
@@ -36,8 +36,27 @@
 
 <!-- toastr init -->
 <script src="{{ URL::asset('build/js/pages/toastr.init.js') }}"></script>
+<script src="{{ URL::asset('build/libs/select2/js/select2.min.js') }}"></script>
+<script>
+    $('document').ready(function() {
+        $('.select2').select2();
+        $('.single-select').select2({
+            theme: 'bootstrap4',
+            width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
+            placeholder: $(this).data('placeholder'),
+            allowClear: Boolean($(this).data('allow-clear')),
+        });
+        $('.multiple-select').select2({
+            theme: 'bootstrap4',
+            width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
+            placeholder: $(this).data('placeholder'),
+            allowClear: Boolean($(this).data('allow-clear')),
+        });
+    });
+
+</script>
 <!-- form advanced init -->
-<script src="{{ URL::asset('build/js/pages/form-advanced.init.js') }}"></script>
+{{-- <script src="{{ URL::asset('build/js/pages/form-advanced.init.js') }}"></script> --}}
 
 <!-- Responsive examples -->
 <script src="{{ URL::asset('build/libs/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
@@ -114,7 +133,6 @@
         });
     });
 </script>
-
 
 
 @yield('script')

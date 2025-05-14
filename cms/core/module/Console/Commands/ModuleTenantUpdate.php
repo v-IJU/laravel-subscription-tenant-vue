@@ -1,26 +1,26 @@
 <?php
 
-namespace cms\core\menu\Console\Commands;
+namespace cms\core\module\Console\Commands;
 
 use Illuminate\Console\Command;
-
-//helpers
-use Menu;
-class TenantCoreMenu extends Command
+use Module;
+use cms\core\module\Models\ModuleModel;
+use cms\core\subscription\Models\PlanFeatureModel;
+class ModuleTenantUpdate extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = "update:cms-menu-core-tenant";
+    protected $signature = "update:cms-module-core-tenant";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = "Update Core Menus in Tenant Db with out some Menus and Module whil onboard time";
+    protected $description = "Update module both core and local to on boared school with some restrice modules";
 
     /**
      * Create a new command instance.
@@ -39,7 +39,7 @@ class TenantCoreMenu extends Command
      */
     public function handle()
     {
-        \Log::channel("debug")->error("MenuTenantUpdate1: ");
-        Menu::registerMenu("tenant");
+        \Log::channel("debug")->error("ModuleTenantUpdate1: ");
+        Module::registerModule("tenant");
     }
 }

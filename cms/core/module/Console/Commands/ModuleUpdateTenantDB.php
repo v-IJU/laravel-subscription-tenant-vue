@@ -1,33 +1,33 @@
 <?php
 
-namespace cms\core\menu\Console\Commands;
+namespace cms\core\module\Console\Commands;
 
 use App\Models\MultiTenant;
 use Illuminate\Console\Command;
+use Module;
 use cms\core\subscription\Models\PlanPriceModel;
-use cms\core\subscription\Models\SubscriptionModel;
-use cms\core\subscription\Models\SubscriptionUser;
-use cms\core\institute\Models\InstituteModel;
 use cms\core\module\Models\ModuleModel;
 use cms\core\subscription\Models\PlanFeatureModel;
-//helpers
-use Menu;
 use Session;
-class MenuUpdateTenantDB extends Command
+use cms\core\institute\Models\InstituteModel;
+use cms\core\subscription\Models\SubscriptionModel;
+use cms\core\subscription\Models\SubscriptionUser;
+
+class ModuleUpdateTenantDB extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = "tenants:update-menu";
+    protected $signature = "tenants:update-module";
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = "Update Newly created or Edited Menus to tenants Databases";
+    protected $description = "Update Tenant Databases Module if any new module created";
 
     /**
      * Create a new command instance.
@@ -71,10 +71,10 @@ class MenuUpdateTenantDB extends Command
                 $moduleList = $modulesArray;
                 Session::put(["module_list" => $moduleList]);
                 $multitenant->run(function () {
-                    Menu::registerMenuTenants("tenant");
+                    Module::registerModuleTenant("tenant");
                 });
 
-                $this->info("Menu Updated:" . $multitenant->id);
+                $this->info("Module Updated:" . $multitenant->id);
             }
         }
     }

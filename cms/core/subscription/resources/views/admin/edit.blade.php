@@ -12,7 +12,7 @@
             DashBoard
         @endslot
         @slot('title')
-            Create subscription
+        {{ $layout == 'edit' ? 'Edit' : 'Create' }} subscription
         @endslot
     @endcomponent
     <div class="row">
@@ -26,18 +26,24 @@
                     @elseif($layout == 'edit')
                         {{ Form::open(['role' => 'form', 'route' => ['subscription.update', $data->id], 'method' => 'put', 'enctype' => 'multipart/form-data', 'class' => 'custom-validation form-horizontal form-label-left', 'id' => 'user-form', 'novalidate' => 'novalidate']) }}
                     @endif
-                    <div class="row">
+                   <div class="row justify-content-end">
+                       <div class="box-header with-border mar-bottom20 mb-3 col-md-2 text-end ">
+                            <a class="btn btn-info btn-sm m-1  px-3" href="{{ route('subscription.index') }}"><i
+                                class="fa fa-arrow-left"></i>&nbsp;&nbsp;&nbsp;Back</a>
+                       </div>
+                   </div>
+                    <div class="row">                     
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label>Name</label>
-                                <input type="text" name="name" class="form-control" required>
+                                <input type="text" name="name" class="form-control" value="{{ @$data->name }}" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <div class="mb-3">
                                     <label>Price</label>
-                                    <input type="number" name="price" class="form-control" required>
+                                    <input type="number" name="price" class="form-control" value="{{ @$data->price }}" required>
                                 </div>
                             </div>
                         </div>
@@ -45,7 +51,7 @@
                             <div class="mb-3">
                                 <div class="mb-3">
                                     <label>Currency</label>
-                                    <input type="text" name="currency" class="form-control" value="inr" required>
+                                    <input type="text" name="currency" class="form-control" value="{{ @$data->currency ?? "inr" }}" required>
                                 </div>
                             </div>
                         </div>
@@ -53,15 +59,15 @@
                             <div class="mb-3">
                                 <label>Frequency</label>
                                 <select name="frequency" class="form-control">
-                                    <option value="1">Monthly</option>
-                                    <option value="2">Yearly</option>
+                                    <option {{@$data->frequency == 1 ? 'selected' : ''}}value="1">Monthly</option>
+                                    <option  {{@$data->frequency == 2 ? 'selected' : ''}} value="2">Yearly</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label>Trail Period (Days)</label>
-                                <input type="number" name="trail_period" class="form-control" value="7" required>
+                                <input type="number" name="trail_period" class="form-control" value="{{ @$data->trail_period ?? 7}}" required>
                             </div>
                         </div>
 
@@ -70,8 +76,8 @@
                             <div class="mb-3">
                                 <label>Status</label>
                                 <select name="status" class="form-control">
-                                    <option value="1">Active</option>
-                                    <option value="0">Inactive</option>
+                                    <option {{@$data->status == 1 ? 'selected' : ''}} value="1">Active</option>
+                                    <option {{@$data->status == 0 ? 'selected' : ''}} value="0">Inactive</option>
                                 </select>
                             </div>
                         </div>
@@ -82,7 +88,7 @@
                         <label>Features</label>
                         @foreach ($modules as $module)
                             <div class="col-md-2 mb-2">
-                                <input type="checkbox" name="features[]" value="{{ $module->id }}">
+                                <input type="checkbox" name="features[]" value="{{ $module->id }}" {{@$data->features->pluck('module_id')->contains($module->id) ? 'checked' : ''}}>
                                 {{ $module->name }}
                             </div>
                         @endforeach

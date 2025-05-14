@@ -95,10 +95,12 @@ class SubscriptionController extends Controller
      */
     public function edit($id)
     {
-        $data = SubscriptionModel::find($id);
+        $data = SubscriptionModel::with("features")->find($id);
+        $modules = ModuleModel::all();
         return view("subscription::admin.edit", [
             "layout" => "edit",
             "data" => $data,
+            "modules" => $modules,
         ]);
     }
 
@@ -199,6 +201,11 @@ class SubscriptionController extends Controller
                     return "";
                 }
             })
+            ->addColumn("status", function ($data) {
+                return view("layout::datatable.statustoggle", [
+                    "data" => $data,
+                ])->render();
+            })
             ->addColumn("actdeact", function ($data) {
                 if ($data->id != "1") {
                     $statusbtnvalue =
@@ -228,7 +235,9 @@ class SubscriptionController extends Controller
             return [];
         }
 
-        return $datatables->make(true);
+        return $datatables
+            ->rawColumns(["check", "status", "actdeact", "action"])
+            ->make(true);
     }
 
     /*
@@ -239,7 +248,24 @@ class SubscriptionController extends Controller
     function statusChange(Request $request)
     {
         CGate::authorize("edit-subscription");
-
+        if ($request->ajax()) {
+            $data = SubscriptionModel::find($request->id);
+            if ($data) {
+                $data->update([
+                    "status" => $request->status,
+                ]);
+                return response()->json([
+                    "success" => "success",
+                    "data" => $data,
+                    "status" => $request->status,
+                ]);
+            }
+            return response()->json([
+                "success" => "fails",
+                "data" => $data,
+                "status" => $request->status,
+            ]);
+        }
         if (!empty($request->selected_subscription)) {
             $obj = new SubscriptionModel();
             foreach ($request->selected_subscription as $k => $v) {

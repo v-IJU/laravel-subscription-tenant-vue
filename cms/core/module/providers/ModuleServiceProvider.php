@@ -12,7 +12,9 @@ class ModuleServiceProvider extends ServiceProvider
      * commande
      */
     protected $commands = [
-        'cms\core\module\Console\Commands\ModuleUpdate'
+        "cms\core\module\Console\Commands\ModuleUpdate",
+        "cms\core\module\Console\Commands\ModuleTenantUpdate",
+        "cms\core\module\Console\Commands\ModuleUpdateTenantDB",
     ];
     /**
      * Bootstrap the application services.
@@ -21,7 +23,6 @@ class ModuleServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
     }
 
     /**
@@ -50,17 +51,13 @@ class ModuleServiceProvider extends ServiceProvider
             require __DIR__.'/../routes.php';
         });
         */
-
-
     }
     public function registerAdminRoute()
     {
-
-        Route::prefix('administrator')
-            ->middleware(['web','Admin'])
-            ->namespace('cms\core\user\Controllers')
-            ->group(__DIR__ . '/../adminroutes.php');
-
+        Route::prefix("administrator")
+            ->middleware(["web", "Admin"])
+            ->namespace("cms\core\user\Controllers")
+            ->group(__DIR__ . "/../adminroutes.php");
     }
 
     /**
@@ -72,18 +69,28 @@ class ModuleServiceProvider extends ServiceProvider
     {
         $theme = Cms::getCurrentTheme();
 
-        $viewPath = resource_path('views/modules/user');
+        $viewPath = resource_path("views/modules/user");
 
         //$sourcePath = __DIR__.'/../resources/views';
-        $Path = __DIR__.'/../resources/views';
-        $sourcePath = base_path().'/cms/local/'.$theme.'/user/resources/views';
+        $Path = __DIR__ . "/../resources/views";
+        $sourcePath =
+            base_path() . "/cms/local/" . $theme . "/user/resources/views";
 
         $this->publishes([
-            $sourcePath => $viewPath
+            $sourcePath => $viewPath,
         ]);
-        $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/user';
-        }, [$Path]), [$sourcePath,$Path]), 'user');
+        $this->loadViewsFrom(
+            array_merge(
+                array_map(
+                    function ($path) {
+                        return $path . "/modules/user";
+                    },
+                    [$Path]
+                ),
+                [$sourcePath, $Path]
+            ),
+            "user"
+        );
     }
 
     /*
@@ -93,5 +100,4 @@ class ModuleServiceProvider extends ServiceProvider
     {
         $this->commands($this->commands);
     }
-
 }

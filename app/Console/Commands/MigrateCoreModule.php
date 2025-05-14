@@ -91,7 +91,7 @@ class MigrateCoreModule extends Command
                                 DIRECTORY_SEPARATOR .
                                 "cms" .
                                 DIRECTORY_SEPARATOR .
-                                "tmp_central" .
+                                "tmp" .
                                 DIRECTORY_SEPARATOR .
                                 "migration" .
                                 DIRECTORY_SEPARATOR .
@@ -109,7 +109,7 @@ class MigrateCoreModule extends Command
                     DIRECTORY_SEPARATOR .
                     "cms" .
                     DIRECTORY_SEPARATOR .
-                    "tmp_central" .
+                    "tmp" .
                     DIRECTORY_SEPARATOR .
                     "migration",
             ]);

@@ -12,7 +12,9 @@ class MenuServiceProvider extends ServiceProvider
      * artisan command
      */
     protected $commands = [
-        'cms\core\menu\Console\Commands\AdminMenu'
+        "cms\core\menu\Console\Commands\AdminMenu",
+        "cms\core\menu\Console\Commands\MenuUpdateTenantDB",
+        "cms\core\menu\Console\Commands\TenantCoreMenu",
     ];
     /**
      * Bootstrap the application services.
@@ -29,7 +31,6 @@ class MenuServiceProvider extends ServiceProvider
             $configPath => config_path('modules.php'),
         ], 'config');
         */
-
     }
 
     /**
@@ -59,23 +60,18 @@ class MenuServiceProvider extends ServiceProvider
         });
         */
 
-        Route::prefix('')
-            ->middleware(['web'])
-            ->namespace('cms\core\menu\Controllers')
-            ->group(__DIR__ . '/../routes.php');
+        Route::prefix("")
+            ->middleware(["web"])
+            ->namespace("cms\core\menu\Controllers")
+            ->group(__DIR__ . "/../routes.php");
         //require __DIR__.'/../routes.php';
-
-
     }
     public function registerAdminRoute()
     {
-
-        Route::prefix('administrator')
-            ->middleware(['web','Admin'])
-            ->namespace('cms\core\menu\Controllers')
-            ->group(__DIR__ . '/../adminroutes.php');
-
-
+        Route::prefix("administrator")
+            ->middleware(["web", "Admin"])
+            ->namespace("cms\core\menu\Controllers")
+            ->group(__DIR__ . "/../adminroutes.php");
     }
 
     /**
@@ -87,18 +83,28 @@ class MenuServiceProvider extends ServiceProvider
     {
         $theme = Cms::getCurrentTheme();
 
-        $viewPath = resource_path('views/modules/menu');
+        $viewPath = resource_path("views/modules/menu");
 
         //$sourcePath = __DIR__.'/../resources/views';
-        $Path = __DIR__.'/../resources/views';
-        $sourcePath = base_path().'/cms/local/'.$theme.'/menu/resources/views';
+        $Path = __DIR__ . "/../resources/views";
+        $sourcePath =
+            base_path() . "/cms/local/" . $theme . "/menu/resources/views";
 
         $this->publishes([
-            $sourcePath => $viewPath
+            $sourcePath => $viewPath,
         ]);
-        $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/menu';
-        }, [$Path]), [$sourcePath,$Path]), 'wmenu');
+        $this->loadViewsFrom(
+            array_merge(
+                array_map(
+                    function ($path) {
+                        return $path . "/modules/menu";
+                    },
+                    [$Path]
+                ),
+                [$sourcePath, $Path]
+            ),
+            "wmenu"
+        );
     }
 
     /*
@@ -108,5 +114,4 @@ class MenuServiceProvider extends ServiceProvider
     {
         $this->commands($this->commands);
     }
-
 }

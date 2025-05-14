@@ -74,7 +74,7 @@
                                 </label>
                                 {{ Form::select('selected_timezone', @$timezone, @$data->selected_timezone ?? 'Asia/Kolkata', [
                                     'id' => 'selected-timezone',
-                                    'class' => 'form-control col-md-7 col-xs-12',
+                                    'class' => 'form-control col-md-7 col-xs-12 select2',
                                     'required' => 'required',
                                     'placeholder' => 'Select'
                                 ]) }}
@@ -171,7 +171,7 @@
                                     <input type="file" name="site_logo" class="form-control" />
                                     <input type="hidden" name="old_site_image" value="{{ @$data->site_logo }}" />
                                     @if (@$data->site_logo)
-                                        <img src="{{ @$data->site_logo }}" width="100px" />
+                                        <img src="{{ @$data->site_logo }}" class="mt-2" width="100px" />
                                     @endif
 
                                 </div>
@@ -184,7 +184,7 @@
                                     <input type="file" name="site_icon" class="form-control" />
                                     <input type="hidden" name="old_site_icon" value="{{ @$data->site_icon }}" />
                                     @if (@$data->site_icon)
-                                        <img src="{{ @$data->site_icon }}" width="100px" />
+                                        <img src="{{ @$data->site_icon }}" class="mt-2" width="100px" />
                                     @endif
 
                                 </div>
@@ -221,5 +221,8 @@
 @section('script')
     <script src="{{ URL::asset('build/libs/parsleyjs/parsley.min.js') }}"></script>
     <script src="{{ URL::asset('build/js/pages/form-validation.init.js') }}"></script>
-
+ 
+ <script>
+    $('.single-select').select2();
+ </script>
 @endsection

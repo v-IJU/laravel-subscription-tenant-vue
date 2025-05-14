@@ -9,4 +9,5 @@ class InstituteModel extends Model
     protected $table = "institute";
 
     protected $guarded = [];
+    protected $connection = "mysql";
 }

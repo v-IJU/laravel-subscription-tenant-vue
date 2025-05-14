@@ -9,4 +9,5 @@ class DomainModel extends Model
 {
     protected $table = "domains";
     protected $guarded = [];
+    protected $connection = "mysql";
 }

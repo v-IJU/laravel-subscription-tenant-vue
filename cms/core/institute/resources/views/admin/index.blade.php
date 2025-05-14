@@ -119,20 +119,12 @@
                     name: 'created_at',
                     className: 'textcenter'
                 },
-                { data: 'status', name: 'id', searchable: false, sortable: false, className: 'textcenter',render : function(data, type, row, meta)
-                    {
-                        if(row['id']!=0)
-                        {
-                            return `<label class="switch">
-                        <input type="checkbox" id=${row['id']} ${row['status']=="Enabled" ? 'checked':''} class="toggle-class" onchange="myFunction(this.checked ? 1:0,this.id)">
-                        <span class="slider round"></span>
-                      </label>`;
-                        }else{
-                            return "";
-                        }
-                        
-                    }
-                  },
+                {
+                    data: 'status',
+                    name: 'status',
+                    sortable: false,
+                    className: 'textcenter'
+                },
                 {
                     data: 'action',
                     name: 'users.id',

@@ -18,6 +18,8 @@ use cms\core\user\Models\UserModel;
 use cms\core\subscription\Models\SubscriptionModel;
 use cms\core\subscription\Models\SubscriptionUser;
 use Illuminate\Support\Facades\Hash;
+use cms\core\module\Models\ModuleModel;
+use cms\core\subscription\Models\PlanFeatureModel;
 
 class InstituteController extends Controller
 {
@@ -85,7 +87,10 @@ class InstituteController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
-            dd($e);
+            $message = $e->getMessage();
+            return redirect()
+                ->route("institute.index")
+                ->with("error", $message);
         }
 
         Session::flash("success", "saved successfully");
@@ -94,8 +99,9 @@ class InstituteController extends Controller
 
     public function onboard(Request $request, $id)
     {
+        $tenant = null;
+        ini_set("max_execution_time", 600);
         try {
-            DB::beginTransaction();
             $institute = InstituteModel::find($id);
             $tenantId = strtolower(
                 str_replace(" ", "_", $institute->institute_name)
@@ -107,17 +113,53 @@ class InstituteController extends Controller
                 ],
             ]);
 
+            $words = array_filter(explode(" ", $institute->institute_name));
+
+            // Take first character of each word, make lowercase
+            $abbr = "";
+            foreach ($words as $word) {
+                $abbr .= strtolower($word[0]);
+            }
             $domain = DomainModel::create([
                 "tenant_id" => $tenant->id,
-                "domain" => "cms1" . "." . config("app.domain"),
+                "domain" => $abbr . "." . config("app.domain"),
             ]);
 
+            $subuser = SubscriptionUser::where(
+                "user_id",
+                $institute->id
+            )->first();
+            // $plan = SubscriptionModel::find($subuser->subscription_plan_id);
+            $filterList = PlanFeatureModel::where(
+                "subscription_plan_id",
+                $subuser->subscription_plan_id
+            )
+                ->pluck("module_id")
+                ->toArray();
+            $modulesArray = ModuleModel::whereIn("id", $filterList)
+                ->pluck("name")
+                ->toArray();
+            $moduleList = $modulesArray;
+            Session::put(["module_list" => $moduleList]);
             dispatch(new TenantInstituteJob($tenant, $institute));
-            DB::commit();
+            $institute->tenant_id = $tenant->id;
+            $institute->onboard_status = 1;
+            $institute->save();
+            \Log::channel("debug")->error("TenantUpdate2: ");
+
+            \Log::channel("debug")->error("TenantUpdate3: ");
         } catch (\Exception $e) {
-            DB::rollback();
-            dd($e);
+            if ($tenant) {
+                $tenant->domains()->delete();
+                $tenant->delete();
+            }
+            $message = $e->getMessage();
+            return redirect()
+                ->route("institute.index")
+                ->with("error", $message);
         }
+        Session::flash("success", "Onboarded successfully");
+        return redirect()->route("institute.index");
     }
 
     /**
@@ -212,6 +254,7 @@ class InstituteController extends Controller
             "institute_name",
             "created_at",
             "onboard_status",
+            "tenant_id",
             DB::raw(
                 "(CASE WHEN " .
                     DB::getTablePrefix() .
@@ -236,6 +279,11 @@ class InstituteController extends Controller
             ->addColumn("created_date", function ($data) {
                 return $data->created_at->format("d-m-Y");
             })
+            ->addColumn("status", function ($data) {
+                return view("layout::datatable.statustoggle", [
+                    "data" => $data,
+                ])->render();
+            })
             ->addColumn("actdeact", function ($data) {
                 if ($data->id != "1") {
                     $statusbtnvalue =
@@ -252,9 +300,20 @@ class InstituteController extends Controller
                 }
             })
             ->addColumn("action", function ($data) {
+                $domain = null;
+                if ($data->tenant_id) {
+                    $domain_info = DomainModel::where(
+                        "tenant_id",
+                        $data->tenant_id
+                    )->first();
+                    if ($domain_info) {
+                        $domain = $domain_info->domain;
+                    }
+                }
                 return view("layout::datatable.action", [
                     "data" => $data,
                     "route" => "institute",
+                    "domain" => $domain,
                     // "authorize_edit" => CGate::authorizeEdit(
                     //     "edit-academicyear"
                     // ),
@@ -271,7 +330,7 @@ class InstituteController extends Controller
             return [];
         }
 
-        return $datatables->make(true);
+        return $datatables->rawColumns(["status", "action"])->make(true);
     }
 
     /*
@@ -283,6 +342,24 @@ class InstituteController extends Controller
     {
         CGate::authorize("edit-institute");
 
+        if ($request->ajax()) {
+            $data = InstituteModel::find($request->id);
+            if ($data) {
+                $data->update([
+                    "status" => $request->status,
+                ]);
+                return response()->json([
+                    "success" => "success",
+                    "data" => $data,
+                    "status" => $request->status,
+                ]);
+            }
+            return response()->json([
+                "success" => "fails",
+                "data" => $data,
+                "status" => $request->status,
+            ]);
+        }
         if (!empty($request->selected_institute)) {
             $obj = new InstituteModel();
             foreach ($request->selected_institute as $k => $v) {
@@ -292,7 +369,6 @@ class InstituteController extends Controller
                 }
             }
         }
-
         Session::flash("success", "Status changed Successfully!!");
         return redirect()->back();
     }

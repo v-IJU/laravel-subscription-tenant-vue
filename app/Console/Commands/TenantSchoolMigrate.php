@@ -39,6 +39,7 @@ class TenantSchoolMigrate extends Command
      */
     public function handle()
     {
+        \Log::channel("debug")->error("start: ");
         if (true) {
             if (
                 !\File::exists(
@@ -64,10 +65,21 @@ class TenantSchoolMigrate extends Command
                 );
             }
             $cms = Cms::allModulesPath(false);
+            \Log::channel("debug")->error("cms: " . json_encode($cms));
             foreach ($cms as $module) {
+                \Log::channel("debug")->error(
+                    "module and exclude1: " .
+                        $module .
+                        json_encode(Configurations::EXCLUDEMODULESBASEBATH)
+                );
                 if (
                     !in_array($module, Configurations::EXCLUDEMODULESBASEBATH)
                 ) {
+                    \Log::channel("debug")->error(
+                        "module and exclude1: " .
+                            $module .
+                            json_encode(Configurations::EXCLUDEMODULESBASEBATH)
+                    );
                     if (
                         \File::exists(
                             base_path() .
@@ -124,6 +136,7 @@ class TenantSchoolMigrate extends Command
                     DIRECTORY_SEPARATOR .
                     "migration",
             ]);
+
             $this->line("Tenant Migration Done: {$tenant->getTenantKey()}");
         });
     }

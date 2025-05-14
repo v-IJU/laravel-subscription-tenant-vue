@@ -112,6 +112,36 @@ class Configurations
 
         return $parm;
     }
+    public static function getCoreModuleMigrationPath($basepath = true)
+    {
+        $cms = Cms::allModulesPath(false);
+
+        $CorePaths = [];
+        foreach ($cms as $module) {
+            if (!in_array($module, self::EXCLUDEMODULESBASEBATH)) {
+                if (
+                    \File::exists(
+                        base_path() .
+                            $module .
+                            DIRECTORY_SEPARATOR .
+                            "Database" .
+                            DIRECTORY_SEPARATOR .
+                            "Migration" .
+                            DIRECTORY_SEPARATOR
+                    )
+                ) {
+                    $CorePaths[] =
+                        base_path() .
+                        $module .
+                        DIRECTORY_SEPARATOR .
+                        "Database" .
+                        DIRECTORY_SEPARATOR .
+                        "Migration";
+                }
+            }
+        }
+        return $CorePaths;
+    }
     public static function getConfig($name)
     {
         $parm = ConfigurationModel::where("name", $name)

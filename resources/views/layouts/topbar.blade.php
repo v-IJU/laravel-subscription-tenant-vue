@@ -31,7 +31,7 @@
             </div>
 
             {{-- three horizonal lines  --}}
-            <button type="button" class="btn btn-sm px-3 font-size-16 header-item waves-effect" id="vertical-menu-btn">
+            <button type="button" class="btn btn-sm px-3 pt-5 font-size-16 header-item waves-effect" id="vertical-menu-btn">
                 <i class="fa fa-fw fa-bars"></i>
             </button>
 

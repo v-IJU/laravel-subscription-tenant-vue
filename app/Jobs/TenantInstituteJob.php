@@ -58,7 +58,7 @@ class TenantInstituteJob implements ShouldQueue
             $user_grp_map->group_id = $user_grp->id;
             $user_grp_map->save();
 
-            $data["institute_name"] = $this->institute->institute_name;
+            $data["site_name"] = $this->institute->institute_name;
             // $form_data["school_email"] = $this->schoolProfileDB->email;
             // $form_data["school_phone"] = $this->schoolProfileDB->phoneno;
 
@@ -72,6 +72,7 @@ class TenantInstituteJob implements ShouldQueue
 
             Artisan::call("update:cms-module-core-tenant");
             Artisan::call("update:cms-menu-core-tenant");
+            \Log::channel("debug")->error("TenantUpdate1: ");
         });
     }
 }

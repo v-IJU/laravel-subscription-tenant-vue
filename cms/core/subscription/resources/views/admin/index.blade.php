@@ -72,6 +72,7 @@
 @endsection
 @section('script')
     <script>
+        window.statuschange = '{{ route('subscription_action_from_admin') }}';
         $('document').ready(function() {
 
             var element = $("#datatable-buttons");

@@ -10,14 +10,22 @@
 
  <div class="actions">
      @if(@$route == 'institute')
-        <form method="post" action="{{ route('institute_onboard_from_admin', $data->id) }}">
+        @if($data->onboard_status == 1)
+         <a class="btn btn-outline-secondary btn-sm web" title="Edit" data="{{ $data->id }}"
+            href="http://{{ $domain }}:8000/" target="_blank">
+                <i class='bx bx-globe'></i> Link
+        </a>
+
+        @else
+            <form method="post" action="{{ route('institute_onboard_from_admin', $data->id) }}">
 
 
-            {{ csrf_field() }}
+                {{ csrf_field() }}
 
 
-            <button class="editbutton btn btn-primary onboard" type="submit">Onboard</button>
-        </form>
+                <button class="editbutton btn btn-primary onboard" type="submit">Onboard</button>
+            </form>
+        @endif
      @endif
      <a class="btn btn-outline-secondary btn-sm edit" title="Edit" data-toggle="modal" data={{ $data->id }}
          href="{{ route($route . '.edit', $data->id) }}">
